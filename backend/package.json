@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+
+  "scripts": {
+    "start": "node --inspect index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LiemMinhHuy/E-Learning.git"
+  },
+  "keywords": [
+    "E-Learning"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LiemMinhHuy/E-Learning/issues"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "homepage": "https://github.com/LiemMinhHuy/E-Learning#readme",
+  "description": ""
+}
