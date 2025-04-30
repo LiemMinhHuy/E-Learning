@@ -1,6 +1,7 @@
 const User = require("../models/User");
-const bcrypt = require('bcrypt');
-const { multipleMongooseToObject, mongooseToObject } = require("../../util/mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { mongooseToObject } = require("../../util/mongoose");
 
 class AuthController {
   // ========================= REGISTER =========================
@@ -53,7 +54,7 @@ class AuthController {
       }
 
       // Check if email already exists
-      const checkUserAlreadyExists = await User.findOne({email});
+      const checkUserAlreadyExists = await User.findOne({ email });
       if (checkUserAlreadyExists) {
         return res.status(400).json({
           success: false,
@@ -84,10 +85,75 @@ class AuthController {
       res.status(201).json({
         success: true,
         message: "Registration successful",
-        data: mongooseToObject(newUser)
+        data: mongooseToObject(newUser),
       });
     } catch (err) {
       next(err);
+    }
+  }
+
+  // ========================= LOGIN =========================
+  async login(req, res, next) {
+    try {
+      const { email, password } = req.body;
+
+      // Validate input
+      if (!email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide both email and password"
+        });
+      }
+
+      // Find user by email
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password"
+        });
+      }
+
+      // Verify password
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password"
+        });
+      }
+
+      // Generate JWT token
+      const tokenData = {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        firstname: user.firstname,
+        lastname: user.lastname
+      };
+
+      const accessToken = jwt.sign(
+        tokenData,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: process.env.ACCESS_TOKEN_LIFE }
+      );
+
+      // Remove password from response
+      const userResponse = mongooseToObject(user);
+      delete userResponse.password;
+
+      return res.status(200).json({
+        success: true,
+        message: "Login successful",
+        data: {
+          user: userResponse,
+          accessToken
+        }
+      });
+
+    } catch (error) {
+      console.error('Login error:', error);
+      next(error);
     }
   }
 }
