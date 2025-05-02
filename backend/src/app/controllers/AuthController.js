@@ -101,7 +101,7 @@ class AuthController {
       if (!email || !password) {
         return res.status(400).json({
           success: false,
-          message: "Please provide both email and password"
+          message: "Please provide both email and password",
         });
       }
 
@@ -110,7 +110,7 @@ class AuthController {
       if (!user) {
         return res.status(401).json({
           success: false,
-          message: "Invalid email or password"
+          message: "Invalid email or password",
         });
       }
 
@@ -119,7 +119,7 @@ class AuthController {
       if (!isPasswordValid) {
         return res.status(401).json({
           success: false,
-          message: "Invalid email or password"
+          message: "Invalid email or password",
         });
       }
 
@@ -129,14 +129,12 @@ class AuthController {
         email: user.email,
         role: user.role,
         firstname: user.firstname,
-        lastname: user.lastname
+        lastname: user.lastname,
       };
 
-      const accessToken = jwt.sign(
-        tokenData,
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: process.env.ACCESS_TOKEN_LIFE }
-      );
+      const accessToken = jwt.sign(tokenData, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: process.env.ACCESS_TOKEN_LIFE,
+      });
 
       // Remove password from response
       const userResponse = mongooseToObject(user);
@@ -147,12 +145,38 @@ class AuthController {
         message: "Login successful",
         data: {
           user: userResponse,
-          accessToken
-        }
+          accessToken,
+        },
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      next(error);
+    }
+  }
+
+  getProfile(req, res, next) {
+    try {
+      const user = req.user; // Assuming user is set in the request by middleware
+
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized",
+        });
+      }
+
+      // Remove password from response
+      const userResponse = mongooseToObject(user);
+      delete userResponse.password;
+
+      return res.status(200).json({
+        success: true,
+        message: "Profile retrieved successfully",
+        data: userResponse,
       });
 
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Get profile error:", error);
       next(error);
     }
   }
