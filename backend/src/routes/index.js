@@ -4,10 +4,12 @@ const categoryRouter = require('./category');
 const lessonRouter = require('./lesson');
 const quizRouter = require('./quiz');
 const authRouter = require('./auth');
+const enrollmentRouter = require('./enrollment');
 
 function route(app){
+    app.use('/enrollments', enrollmentRouter);
     app.use('/auth', authRouter);
-    app.use('/quizs', quizRouter);
+    app.use('/quizzes', quizRouter);
     app.use('/lessons', lessonRouter);
     app.use('/categories', categoryRouter);
     app.use('/courses', courseRouter);

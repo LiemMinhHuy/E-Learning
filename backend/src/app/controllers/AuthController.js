@@ -154,6 +154,7 @@ class AuthController {
     }
   }
 
+  // ========================= PROFILE =========================
   getProfile(req, res, next) {
     try {
       const user = req.user; // Assuming user is set in the request by middleware
@@ -174,10 +175,62 @@ class AuthController {
         message: "Profile retrieved successfully",
         data: userResponse,
       });
-
     } catch (error) {
       console.error("Get profile error:", error);
       next(error);
+    }
+  }
+
+  // ========================= UPDATE USER =========================
+  async update(req, res, next) {
+    try {
+      const userId = req.user._id; 
+      const {firstname, lastname, email, phoneNumber} = req.body; 
+
+      const user = await User.findByIdAndUpdate(userId, {
+        firstname,
+        lastname,
+        email,
+        phoneNumber,
+      }, { new: true, runValidators: true });
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+      res.json({
+        success: true,
+        data: mongooseToObject(user),
+      });
+    } catch (error) {
+      console.error("Update user error:", error);
+      next(error); 
+    }
+  }
+
+  // ========================= DELETE USER =========================
+  async delete(req, res, next) {
+    try{
+      const userId = req.user._id; 
+      const user = await User.findByIdAndDelete(userId); 
+
+      if(!user){
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "User deleted successfully",
+      });
+    }
+    catch (error) {
+      console.error("Delete user error:", error);
+      next(error); 
     }
   }
 }

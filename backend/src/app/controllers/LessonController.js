@@ -5,17 +5,23 @@ const {
 } = require("../../util/mongoose");
 
 class LessonController {
-  // async index(req, res, next) {
-  //   try {
-  //     const lessons = await Lesson.find({});
-  //     res.json({
-  //       success: true,
-  //       data: multipleMongooseToObject(lessons),
-  //     });
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // }
+  async index(req, res, next) {
+    try {
+      const courseID = req.params.courseID; // Lấy courseId từ params
+      const lessons = await Lesson.find({course_id: courseID});
+      if (!lessons) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Lessons not found" });
+      }
+      res.json({
+        success: true,
+        data: multipleMongooseToObject(lessons),
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 
   async show(req, res, next) {
     try {
@@ -37,15 +43,15 @@ class LessonController {
   async store(req, res, next) {
     try {
       const lesson = new Lesson(req.body);
-      // const user = req.user; // Lấy user từ request (sau khi đã authenticate)
+      const user = req.user; // Lấy user từ request (sau khi đã authenticate)
 
-      // // Kiểm tra nếu user không phải admin hoặc instructor thì từ chối
-      // if (user.role !== "admin" && user.role !== "instructor") {
-      //   return res.status(403).json({
-      //     success: false,
-      //     message: "Only admin and instructor can create Lessons",
-      //   });
-      // }
+      // Kiểm tra nếu user không phải admin hoặc instructor thì từ chối
+      if (user.role !== "admin" && user.role !== "instructor") {
+        return res.status(403).json({
+          success: false,
+          message: "Only admin and instructor can create Lessons",
+        });
+      }
 
       await lesson.save();
       res.status(201).json({
@@ -59,15 +65,15 @@ class LessonController {
 
   async destroy(req, res, next) {
     try {
-      // const user = req.user; // Lấy user từ request (sau khi đã authenticate)
+      const user = req.user; // Lấy user từ request (sau khi đã authenticate)
 
-      // // Kiểm tra nếu user không phải admin hoặc instructor thì từ chối
-      // if (user.role !== "admin") {
-      //   return res.status(403).json({
-      //     success: false,
-      //     message: "Only admin can create Lessons",
-      //   });
-      // }
+      // Kiểm tra nếu user không phải admin hoặc instructor thì từ chối
+      if (user.role !== "admin") {
+        return res.status(403).json({
+          success: false,
+          message: "Only admin can create Lessons",
+        });
+      }
 
       const lesson = await Lesson.findByIdAndDelete({ _id: req.params.id });
       if (!Lesson) {
@@ -86,15 +92,15 @@ class LessonController {
 
   async update(req, res, next) {
     try {
-      // const user = req.user; // Lấy user từ request (sau khi đã authenticate)
+      const user = req.user; // Lấy user từ request (sau khi đã authenticate)
 
-      // // Kiểm tra nếu user không phải admin hoặc instructor thì từ chối
-      // if (user.role !== "admin" && user.role !== "instructor") {
-      //   return res.status(403).json({
-      //     success: false,
-      //     message: "Only admin and instructor can create Lessons",
-      //   });
-      // }
+      // Kiểm tra nếu user không phải admin hoặc instructor thì từ chối
+      if (user.role !== "admin" && user.role !== "instructor") {
+        return res.status(403).json({
+          success: false,
+          message: "Only admin and instructor can create Lessons",
+        });
+      }
 
       const LessonId = req.params.id;
       const LessonData = req.body;
