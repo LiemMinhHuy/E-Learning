@@ -21,10 +21,15 @@ function Login() {
         e.preventDefault();
         try {
             const data = await login(formData.email, formData.password, formData.remember);
-            // Xử lý khi đăng nhập thành công (ví dụ: lưu token, chuyển trang, ...)
-            console.log('Login success:', data);
-            // Ví dụ: chuyển hướng về trang chủ
-            // window.location.href = '/';
+            // Lưu user vào localStorage để Header nhận diện đăng nhập
+            if (data && data.data && data.data.user) {
+                localStorage.setItem('user', JSON.stringify(data.data.user));
+                console.log('User info saved to localStorage:', data.data.user);
+                window.location.href = '/'; // Chuyển về trang chủ khi đăng nhập thành công
+            } else {
+                console.log('No user info returned from API');
+            }
+            // window.location.href = '/'; // Đã comment lại để ở lại trang đăng nhập
         } catch (error) {
             // Xử lý khi đăng nhập thất bại
             alert(error.message || 'Login failed');
@@ -42,16 +47,16 @@ function Login() {
                     />
                     E-Learning
                 </Link>
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="flex justify-center text-xl font-semibold leading-tight tracking-tight text-gray-900 md:text-3xl dark:text-white">
                             Sign in
                         </h1>
-                        <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                        <form className="space-y-4 md:space-y-2" onSubmit={handleSubmit}>
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                                    className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
                                 >
                                     Your email
                                 </label>
@@ -59,7 +64,7 @@ function Login() {
                                     type="email"
                                     name="email"
                                     id="email"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:text-xl"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 h-12 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:text-lg text-base"
                                     placeholder="example@gmail.com"
                                     required
                                     value={formData.email}
@@ -69,7 +74,7 @@ function Login() {
                             <div>
                                 <label
                                     htmlFor="password"
-                                    className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                                    className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
                                 >
                                     Password
                                 </label>
@@ -78,7 +83,7 @@ function Login() {
                                     name="password"
                                     id="password"
                                     placeholder="••••••••"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:text-xl"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 h-12 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:text-lg text-base"
                                     required
                                     value={formData.password}
                                     onChange={handleChange}
@@ -96,7 +101,7 @@ function Login() {
                                             onChange={handleChange}
                                         />
                                     </div>
-                                    <div className="ml-3 text-lg">
+                                    <div className="ml-3 text-base">
                                         <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">
                                             Remember me
                                         </label>
@@ -104,14 +109,14 @@ function Login() {
                                 </div>
                                 <Link
                                     to="/forgot-password"
-                                    className="text-lg font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                    className="text-base font-medium text-primary-600 hover:underline dark:text-primary-500"
                                 >
                                     Forgot password?
                                 </Link>
                             </div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                className="w-full flex justify-center text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                             >
                                 Sign in
                             </button>
@@ -119,7 +124,7 @@ function Login() {
                             {/* Ngăn cách */}
                             <div className="flex items-center my-4">
                                 <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
-                                <span className="mx-4 text-gray-400 text-lg">or</span>
+                                <span className="mx-4 text-gray-400 text-base">or</span>
                                 <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
                             </div>
 
@@ -127,7 +132,7 @@ function Login() {
                             <div className="flex justify-center gap-4 mb-4">
                                 <button
                                     type="button"
-                                    className="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition overflow-hidden p-0 mt-0.5"
+                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition overflow-hidden p-0 mt-2"
                                     onClick={() => window.location.href = '/api/auth/google'}
                                     aria-label="Sign in with Google"
                                 >
@@ -135,7 +140,7 @@ function Login() {
                                 </button>
                                 <button
                                     type="button"
-                                    className="flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition overflow-hidden p-0"
+                                    className="flex items-center justify-center w-10 h-12 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition overflow-hidden p-0"
                                     onClick={() => window.location.href = '/api/auth/facebook'}
                                     aria-label="Sign in with Facebook"
                                 >
@@ -143,7 +148,7 @@ function Login() {
                                 </button>
                                 <button
                                     type="button"
-                                    className="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition overflow-hidden p-0 mt-0.5"
+                                    className="flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition overflow-hidden p-0 mt-2"
                                     onClick={() => window.location.href = '/api/auth/github'}
                                     aria-label="Sign in with GitHub"
                                 >
@@ -151,7 +156,7 @@ function Login() {
                                 </button>
                             </div>
 
-                            <p className="text-lg font-light text-gray-500 dark:text-gray-400">
+                            <p className="text-base font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet?{' '}
                                 <Link
                                     to="/register"

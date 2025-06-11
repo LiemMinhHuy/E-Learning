@@ -25,6 +25,47 @@ async function seedProfiles() {
             {
                 user_id: users[4]._id, // student2
                 bio: 'Currently studying computer science and exploring different areas of programming.'
+            },
+            // Thêm 10 profile mẫu mới (nếu có đủ user)
+            {
+                user_id: users[5]?._id,
+                bio: 'Enthusiastic learner interested in mobile app development.'
+            },
+            {
+                user_id: users[6]?._id,
+                bio: 'Backend developer with a passion for scalable systems.'
+            },
+            {
+                user_id: users[7]?._id,
+                bio: 'UI/UX designer who loves creating beautiful interfaces.'
+            },
+            {
+                user_id: users[8]?._id,
+                bio: 'Full-stack developer and open-source contributor.'
+            },
+            {
+                user_id: users[9]?._id,
+                bio: 'Data analyst with a keen eye for detail.'
+            },
+            {
+                user_id: users[10]?._id,
+                bio: 'Cloud computing enthusiast and DevOps engineer.'
+            },
+            {
+                user_id: users[11]?._id,
+                bio: 'Cybersecurity student eager to learn new things.'
+            },
+            {
+                user_id: users[12]?._id,
+                bio: 'AI researcher and machine learning practitioner.'
+            },
+            {
+                user_id: users[13]?._id,
+                bio: 'Game developer and indie game creator.'
+            },
+            {
+                user_id: users[14]?._id,
+                bio: 'Content creator and online course reviewer.'
             }
         ];
 
