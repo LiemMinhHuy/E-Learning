@@ -8,7 +8,7 @@ import Contract from '~/pages/Contract';
 import Upload from '~/pages/Upload';
 import Login from '~/pages/Login';
 import Register from '~/pages/Register';
-import ListCourse from '~/pages/Course/ListCourse';
+import ListCourse from '~/pages/Course';
 import LessonPage from '~/pages/Lesson';
 
 

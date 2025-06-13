@@ -10,5 +10,6 @@ router.get("/:id/lessons", courseController.getLessonsByCourse);
 router.post("/", isAuthenticated, courseController.store);
 router.put("/:id", isAuthenticated, courseController.update);
 router.delete("/:id", isAuthenticated, courseController.destroy);
+router.post("/:id/enroll", isAuthenticated, courseController.enroll);
 
 module.exports = router;

@@ -11,6 +11,7 @@ import {
     PopoverButton,
     PopoverGroup,
     PopoverPanel,
+    Menu,
 } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
@@ -27,6 +28,11 @@ function Header() {
             setUser(JSON.parse(userData));
         }
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        window.location.reload();
+    };
 
     return (
         <header className="bg-white shadow-md border-b border-gray-200">
@@ -100,13 +106,39 @@ function Header() {
                 {/* Right side buttons */}
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6 items-center">
                     {user ? (
-                        <Link to="/profile">
-                            <img
-                                src={user.avatar && user.avatar !== '' ? user.avatar : '/default-avatar.png'}
-                                alt="avatar"
-                                className="w-12 h-12 rounded-full object-cover border-2 border-primary-600 shadow"
-                            />
-                        </Link>
+                        <Menu as="div" className="relative">
+                            <Menu.Button>
+                                <img
+                                    src={user.avatar && user.avatar !== '' ? user.avatar : '/default-avatar.png'}
+                                    alt="avatar"
+                                    className="w-12 h-12 rounded-full object-cover border-2 border-primary-600 shadow cursor-pointer"
+                                />
+                            </Menu.Button>
+                            <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                <div className="py-1">
+                                    <Menu.Item>
+                                        {({ active }) => (
+                                            <Link
+                                                to="/profile"
+                                                className={`block px-4 py-2 text-sm text-gray-700 ${active ? 'bg-gray-100' : ''}`}
+                                            >
+                                                Profile
+                                            </Link>
+                                        )}
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        {({ active }) => (
+                                            <button
+                                                onClick={handleLogout}
+                                                className={`block w-full text-left px-4 py-2 text-sm text-red-600 ${active ? 'bg-gray-100' : ''}`}
+                                            >
+                                                Đăng xuất
+                                            </button>
+                                        )}
+                                    </Menu.Item>
+                                </div>
+                            </Menu.Items>
+                        </Menu>
                     ) : (
                         <Link to="/login">
                             <Button>

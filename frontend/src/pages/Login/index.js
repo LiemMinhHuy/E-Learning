@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { login } from '../../services/authService';
 
-function Login() {
+function Login({ onLoginSuccess }) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -25,7 +25,7 @@ function Login() {
             if (data && data.data && data.data.user) {
                 localStorage.setItem('user', JSON.stringify(data.data.user));
                 console.log('User info saved to localStorage:', data.data.user);
-                window.location.href = '/'; // Chuyển về trang chủ khi đăng nhập thành công
+                if (onLoginSuccess) onLoginSuccess(); // Gọi callback để ẩn form login
             } else {
                 console.log('No user info returned from API');
             }

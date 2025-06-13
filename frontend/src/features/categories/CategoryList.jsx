@@ -1,36 +1,48 @@
-import React, { useEffect, useState } from "react";
-import { getCategories } from "../../services/categoriesService";
+import React, { useEffect, useState } from 'react';
+import { getCategories } from '../../services/categoriesService';
 
-function CategoryList() {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+function CategoryList({ onSelectCategory }) {
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-  useEffect(() => {
-    getCategories()
-      .then((data) => {
-        setCategories(data);
-        setLoading(false);
-      })
-      .catch((err) => {
+    useEffect(() => {
+        getCategories()
+            .then((data) => {
+                setCategories(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setError('Failed to load categories!');
+                setLoading(false);
+            });
+    }, []);
 
-        setError("Failed to load categories!");
-        setLoading(false);
-      });
-  }, []);
+    if (loading) return <div>Loading categories...</div>;
+    if (error) return <div className="text-red-500">{error}</div>;
 
-  if (loading) return <div>Loading categories...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
-
-  return (
-    <div className="grid grid-cols-1 gap-2">
-      {categories.map((cat) => (
-        <div key={cat._id} className="bg-white rounded-lg p-4 flex flex-col items-center">
-          <h3 className="text-xl font-bold mb-2">{cat.name}</h3>
-        </div>
-      ))}
-    </div>
-  );
+    return (
+        <ul>
+            <li
+                onClick={() => {
+                    onSelectCategory(null);
+                }}
+            >
+                Tất cả
+            </li>
+            {categories.map((cat) => (
+                <li
+                    key={cat._id}
+                    onClick={() => {
+                        console.log('Category ID:', cat._id);
+                        onSelectCategory(cat._id);
+                    }}
+                >
+                    {cat.name}
+                </li>
+            ))}
+        </ul>
+    );
 }
 
 export default CategoryList;

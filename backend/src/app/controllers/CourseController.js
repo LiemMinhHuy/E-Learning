@@ -1,5 +1,6 @@
 const Course = require("../models/Course");
 const Lesson = require("../models/Lesson");
+const Enrollment = require("../models/Enrollment");
 const {
   multipleMongooseToObject,
   mongooseToObject,
@@ -121,7 +122,7 @@ class CourseController {
   async getLessonsByCourse(req, res, next) {
     try {
       const courseID = req.params.id; // Lấy courseId từ params
-      const lessons = await Lesson.find({course_id: courseID});
+      const lessons = await Lesson.find({ course_id: courseID });
       if (!lessons) {
         return res
           .status(404)
@@ -136,6 +137,53 @@ class CourseController {
     }
   }
 
+  async enroll(req, res, next) {
+    try {
+      const courseId = req.params.id;
+      const user = req.user; // Lấy user từ request (sau khi đã authenticate)
+
+      // Kiểm tra nếu user không phải student thì từ chối
+      if (user.role !== "student") {
+        return res.status(403).json({
+          success: false,
+          message: "Only students can enroll in courses",
+        });
+      }
+
+      const course = await Course.findById(courseId);
+      if (!course) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Course not found" });
+      }
+
+      // Kiểm tra nếu đã có enrollment
+      const existed = await Enrollment.findOne({
+        user_id: user._id,
+        course_id: courseId,
+      });
+      if (existed) {
+        return res.status(400).json({
+          success: false,
+          message: "You are already enrolled in this course",
+        });
+      }
+
+      // Tạo mới enrollment
+      const enrollment = await Enrollment.create({
+        user_id: user._id,
+        course_id: courseId,
+      });
+
+      res.json({
+        success: true,
+        data: enrollment,
+        message: "Enroll successfully!",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new CourseController();

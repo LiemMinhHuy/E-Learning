@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getCourses } from "../../services/coursesService";
-import { getCoursesByCategory } from "../../services/categoriesService";
 import CourseCard from "./CourseCard";
+import { getCoursesByCategory } from "~/services/categoriesService";
 
-function CourseList({ categoryId }) {
+function CouresByCategory() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setLoading(true);
-    setError("");
-    const fetchPromise = categoryId ? getCoursesByCategory(categoryId) : getCourses();
-    fetchPromise
+    getCoursesByCategory()
       .then((data) => {
         setCourses(data);
         setLoading(false);
@@ -21,7 +17,7 @@ function CourseList({ categoryId }) {
         setError("Failed to load courses!");
         setLoading(false);
       });
-  }, [categoryId]);
+  }, []);
 
   if (loading) return <div>Loading courses...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
@@ -35,4 +31,4 @@ function CourseList({ categoryId }) {
   );
 }
 
-export default CourseList;
+export default CouresByCategory;

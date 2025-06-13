@@ -15,28 +15,8 @@ const categories = [
     description: "Master data analysis, machine learning, and statistics",
   },
   {
-    name: "Business",
-    description: "Business strategy, marketing, and entrepreneurship courses",
-  },
-  {
-    name: "Design",
-    description: "UI/UX design, graphic design, and digital art",
-  },
-  {
     name: "Cybersecurity",
     description: "Learn the basics of cybersecurity and network security",
-  },
-  {
-    name: "Blockchain",
-    description: "Understand blockchain technology and cryptocurrencies",
-  },
-  {
-    name: "Game Development",
-    description: "Create games using Unity and C#",
-  },
-  {
-    name: "Photography",
-    description: "Learn photography techniques and editing skills",
   },
   {
     name: "Cloud Computing",
@@ -47,8 +27,12 @@ const categories = [
     description: "Deep dive into Java programming and frameworks",
   },
   {
-    name: "Marketing",
-    description: "Modern digital marketing strategies",
+    name: "Blockchain",
+    description: "Understand blockchain technology and cryptocurrencies",
+  },
+  {
+    name: "Game Development",
+    description: "Create games using Unity and C#",
   },
 ];
 

@@ -69,7 +69,9 @@ async function seedProfiles() {
             }
         ];
 
-        const seededProfiles = await Profile.insertMany(profiles);
+        // Lọc bỏ các profile không có user_id hợp lệ (undefined)
+        const validProfiles = profiles.filter(p => p.user_id !== undefined);
+        const seededProfiles = await Profile.insertMany(validProfiles);
         console.log('Profiles seeded successfully');
         return seededProfiles;
     } catch (error) {
